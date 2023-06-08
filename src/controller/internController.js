@@ -73,4 +73,28 @@ const createIntern = async (req,res) => {
     }
 }
 
-module.exports = {createClg, createIntern}
+const getIntern = async (req,res) => {
+    try{
+        let clgName = req.query.collegeName
+        if(!clgName){
+            return res.status(400).send({status :false, message: "Must add clgname"})
+        }
+        let clgId = await clgModel.findOne({name:clgName})
+        if(!clgId){
+            return res.status(400).send({status :false, message: "College not exist"})
+        }
+        let intern = await intModel.find({collegeId:clgId._id}).select({_id:1, name:1, email:1, mobile:1})
+        let responseData = {name: clgId.name, fullName: clgId.fullName, logoLink:clgId.logoLink}
+        if(!intern){
+            responseData.interns = "No interns here"
+        }
+        else{
+            responseData.interns = intern
+        }
+        return res.status(201).send({status:true, data: responseData})
+    }catch(error){
+        res.status(500).send({status : false,message: error.message})
+    }
+}
+
+module.exports = {createClg, createIntern, getIntern}
