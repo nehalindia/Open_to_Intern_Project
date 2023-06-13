@@ -2,6 +2,12 @@ const validurl = require('valid-url')
 const Obj = require('mongoose').Types.ObjectId
 const clgModel = require('../model/collegeModel')
 const intModel = require('../model/internModel')
+const validator = require('validator');
+
+
+
+console.log(isValidPhoneNumber); // Outputs true if the phone number is valid, otherwise false
+
 
 const createClg = async (req,res) => {
    try{
@@ -48,9 +54,14 @@ const createIntern = async (req,res) => {
         if(!data.mobile){
             return res.status(400).send({status :false, message: "Must add mobile number"})
         }
-        if(data.mobile.length !== 10){
+        if(data.mobile.length !== 10 ){
             return res.status(400).send({status :false, message: "Must add valid mobile number"})
         }
+        if (!validator.isMobilePhone(data.mobile)) {
+            return res
+              .status(400)
+              .send({ status: false, message: "plz give a correct number" });
+          }
         const existingmobile = await intModel.findOne({ mobile: data.mobile });
         if(existingmobile) {
                 return res.status(400).send({status: false, message:  'Email already exists'});
