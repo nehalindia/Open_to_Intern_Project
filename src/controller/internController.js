@@ -54,10 +54,8 @@ const createIntern = async (req,res) => {
             return res.status(400).send({status :false, message: "Must add valid mobile number"})
         }
         if (!validator.isMobilePhone(data.mobile)) {
-            return res
-              .status(400)
-              .send({ status: false, message: "plz give a correct number" });
-          }
+            return res.status(400).send({ status: false, message: "plz give a correct number" }); 
+        }
         const existingmobile = await intModel.findOne({ mobile: data.mobile });
         if(existingmobile) {
                 return res.status(400).send({status: false, message:  'Email already exists'});
@@ -65,9 +63,7 @@ const createIntern = async (req,res) => {
         if(!data.collegeName){
             return res.status(400).send({status :false, message: "Must add clg"})
         }
-        // if(!obj.isValid(data.collegeId)){
-        //     return res.status(400).send({status :false, message: "Not a valid Id"})
-        // }
+       
         let clgId = await clgModel.findOne({name:data.collegeName})
         if(!clgId) {
             return res.status(404).send({status: false, message:  'College not exists'});
