@@ -51,6 +51,10 @@ const createIntern = async (req,res) => {
         if(data.mobile.length !== 10){
             return res.status(400).send({status :false, message: "Must add valid mobile number"})
         }
+        const existingmobile = await intModel.findOne({ email: data.mobile });
+        if(existingmobile) {
+                return res.status(400).send({status: false, message:  'Email already exists'});
+        }
         if(!data.collegeName){
             return res.status(400).send({status :false, message: "Must add clg"})
         }
@@ -59,7 +63,7 @@ const createIntern = async (req,res) => {
         // }
         let clgId = await clgModel.findOne({name:data.collegeName})
         if(!clgId) {
-            return res.status(400).send({status: false, message:  'College not exists'});
+            return res.status(404).send({status: false, message:  'College not exists'});
         }
         data.collegeId = clgId._id
         delete data.collegeName
@@ -77,11 +81,11 @@ const getIntern = async (req,res) => {
     try{
         let clgName = req.query.collegeName
         if(!clgName){
-            return res.status(400).send({status :false, message: "Must add clgname"})
+            return res.status(404).send({status :false, message: "Must add clgname"})
         }
         let clgId = await clgModel.findOne({name:clgName})
         if(!clgId){
-            return res.status(400).send({status :false, message: "College not exist"})
+            return res.status(404).send({status :false, message: "College not exist"})
         }
         let intern = await intModel.find({collegeId:clgId._id}).select({_id:1, name:1, email:1, mobile:1})
         let responseData = {name: clgId.name, fullName: clgId.fullName, logoLink:clgId.logoLink}
@@ -91,7 +95,7 @@ const getIntern = async (req,res) => {
         else{
             responseData.interns = intern
         }
-        return res.status(201).send({status:true, data: responseData})
+        return res.status(200).send({status:true, data: responseData})
     }catch(error){
         res.status(500).send({status : false,message: error.message})
     }
