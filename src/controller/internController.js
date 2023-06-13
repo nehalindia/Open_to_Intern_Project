@@ -5,10 +5,6 @@ const intModel = require('../model/internModel')
 const validator = require('validator');
 
 
-
-console.log(isValidPhoneNumber); // Outputs true if the phone number is valid, otherwise false
-
-
 const createClg = async (req,res) => {
    try{
         let data = req.body
