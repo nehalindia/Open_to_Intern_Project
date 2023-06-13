@@ -18,7 +18,7 @@ const createClg = async (req,res) => {
         if(!data.fullName){
             return res.status(400).send({status :false, message: "Must add fullname"})
         }
-        if (!validurl.isUri(data.logoLink)){
+        if(!validurl.isUri(data.logoLink)){
             return res.status(400).send({status :false, message: "Not a valid Url"})
         }
 
@@ -58,7 +58,7 @@ const createIntern = async (req,res) => {
         }
         const existingmobile = await intModel.findOne({ mobile: data.mobile });
         if(existingmobile) {
-                return res.status(400).send({status: false, message:  'Email already exists'});
+                return res.status(400).send({status: false, message:  'Mobile already exists'});
         }
         if(!data.collegeName){
             return res.status(400).send({status :false, message: "Must add clg"})
@@ -80,7 +80,7 @@ const createIntern = async (req,res) => {
     }
 }
 
-const getIntern = async (req,res) => {
+const collegeDetails = async (req,res) => {
     try{
         let clgName = req.query.collegeName
         if(!clgName){
@@ -104,4 +104,4 @@ const getIntern = async (req,res) => {
     }
 }
 
-module.exports = {createClg, createIntern, getIntern}
+module.exports = {createClg, createIntern, collegeDetails}
