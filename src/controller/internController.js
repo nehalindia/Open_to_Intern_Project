@@ -51,7 +51,7 @@ const createIntern = async (req,res) => {
         if(data.mobile.length !== 10){
             return res.status(400).send({status :false, message: "Must add valid mobile number"})
         }
-        const existingmobile = await intModel.findOne({ email: data.mobile });
+        const existingmobile = await intModel.findOne({ mobile: data.mobile });
         if(existingmobile) {
                 return res.status(400).send({status: false, message:  'Email already exists'});
         }
